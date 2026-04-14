@@ -7,6 +7,10 @@
     {
       "source": "/api/ask",
       "destination": "https://mit-expression-brain-production.up.railway.app/ask"
+    },
+    {
+      "source": "/api/rotation/:path*",
+      "destination": "https://mit-expression-brain-production.up.railway.app/rotation/:path*"
     }
   ]
 }

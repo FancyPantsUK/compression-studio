@@ -1598,18 +1598,15 @@ const uploadPanel  = document.getElementById('uploadPanel')
 
 uploadToggle.addEventListener('click', () => { uploadPanel.classList.toggle('open') })
 
-const _laneStatusEls = {
-    liquidity: () => document.getElementById('statusLiquidity'),
-    industry:  () => document.getElementById('statusIndustry'),
-    master:    () => document.getElementById('statusMaster'),
-}
-
-const uploadFile = (file, statusEl) =>
+// lane = 'industry' | 'liquidity' | 'master'
+// Routes directly to the lane-specific Railway endpoint (/rotation/{lane}/upload)
+// so no unified /rotation/upload is needed in production.
+const uploadFile = (file, statusEl, lane) =>
 {
     statusEl.textContent = '…'
     const fd = new FormData()
     fd.append('file', file)
-    fetch('/api/rotation/upload', { method: 'POST', body: fd })
+    fetch(`/api/rotation/${lane}/upload`, { method: 'POST', body: fd })
         .then(res =>
         {
             if(!res.ok) return res.json().then(body =>
@@ -1621,13 +1618,9 @@ const uploadFile = (file, statusEl) =>
             })
             return res.json()
         })
-        .then(data =>
+        .then(() =>
         {
-            // Route the success tick to the correct lane status element
-            const targetFn = _laneStatusEls[data.lane]
-            const targetEl = targetFn ? targetFn() : statusEl
-            if(targetEl !== statusEl) statusEl.textContent = ''
-            targetEl.textContent = '✓'
+            statusEl.textContent = '✓'
             window.setTimeout(refreshBrief, 600)
         })
         .catch(err => { if(err.message !== 'unrouted') statusEl.textContent = '✗' })
@@ -1636,19 +1629,19 @@ const uploadFile = (file, statusEl) =>
 document.getElementById('uploadIndustry').addEventListener('change', (e) =>
 {
     if(e.target.files[0])
-        uploadFile(e.target.files[0], document.getElementById('statusIndustry'))
+        uploadFile(e.target.files[0], document.getElementById('statusIndustry'), 'industry')
 })
 
 document.getElementById('uploadLiquidity').addEventListener('change', (e) =>
 {
     if(e.target.files[0])
-        uploadFile(e.target.files[0], document.getElementById('statusLiquidity'))
+        uploadFile(e.target.files[0], document.getElementById('statusLiquidity'), 'liquidity')
 })
 
 document.getElementById('uploadMaster').addEventListener('change', (e) =>
 {
     if(e.target.files[0])
-        uploadFile(e.target.files[0], document.getElementById('statusMaster'))
+        uploadFile(e.target.files[0], document.getElementById('statusMaster'), 'master')
 })
 
 /**
