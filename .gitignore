@@ -3,3 +3,4 @@ dist/
 .claude/
 *.bak
 .DS_Store
+.vercel
