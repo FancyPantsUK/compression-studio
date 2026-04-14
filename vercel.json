@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/ask/stream",
+      "destination": "https://mit-expression-brain-production.up.railway.app/ask/stream"
+    },
+    {
+      "source": "/api/ask",
+      "destination": "https://mit-expression-brain-production.up.railway.app/ask"
+    }
+  ]
+}

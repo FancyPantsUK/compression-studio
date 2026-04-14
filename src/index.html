@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compression Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@300;400&family=DM+Sans:wght@400;500&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <canvas class="webgl"></canvas>
+
+    <div class="loading-bar"></div>
+
+    <header class="topbar">
+        <div class="tb-brand">
+            <span class="tb-logo">CS</span>
+            <div class="tb-brand-copy">
+                <span class="tb-name">Compression Studio</span>
+                <span class="tb-sub">MIT Expression Brain</span>
+            </div>
+        </div>
+        <div class="tb-center">
+            <div class="tb-seal">
+                <span class="seal-dot"></span>
+                <span class="seal-text" id="sealText">Loading…</span>
+            </div>
+        </div>
+        <div class="tb-meta">
+            <span class="tb-issue" id="tbIssue"></span>
+        </div>
+    </header>
+
+    <!-- Modal backdrop -->
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+
+    <!-- Detail panel (click-to-expand) -->
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-header">
+            <span class="detail-title" id="detailTitle"></span>
+            <button class="detail-close" id="detailClose">✕</button>
+        </div>
+        <div class="detail-body" id="detailBody"></div>
+    </div>
+
+    <div class="point point-0">
+        <div class="label clickable">1</div>
+        <div class="text">01 · Regime State — regime view, breadth matrix, and liquidity state.</div>
+    </div>
+    <div class="point point-1">
+        <div class="label clickable">2</div>
+        <div class="text">02 · Investment Commands — 1M · 3M · 9M horizon command cards.</div>
+    </div>
+    <div class="point point-2">
+        <div class="label clickable">3</div>
+        <div class="text">03 · Sector Clusters To Own — named playbook clusters and 1w leaders.</div>
+    </div>
+    <div class="point point-3">
+        <div class="label clickable">4</div>
+        <div class="text">04 · Momentum & Persistence Leaders — master list breadth and persistence table.</div>
+    </div>
+    <div class="point point-4">
+        <div class="label clickable">5</div>
+        <div class="text">05 · Liquidity Rotation Signals — state, averages, and signal pairs.</div>
+    </div>
+    <div class="point point-5">
+        <div class="label clickable">6</div>
+        <div class="text">06 · Risk Management — active monitoring, triggers, and weekly watchlist.</div>
+    </div>
+    <div class="point point-6">
+        <div class="label clickable">7</div>
+        <div class="text">07 · Structural Risks — what could break the whole view.</div>
+    </div>
+    <div class="point point-7">
+        <div class="label">8</div>
+        <div class="text">Sources — MIT issue, prior reference, rotation timestamp.</div>
+    </div>
+    
+    <!-- Upload -->
+    <button class="upload-toggle" id="uploadToggle">Upload</button>
+    <div class="upload-panel" id="uploadPanel">
+        <div class="panel-kicker">Rotation Lab · Input</div>
+        <div class="upload-row">
+            <span class="upload-label">Industry</span>
+            <label class="upload-btn">Choose<input type="file" id="uploadIndustry" accept=".html,.htm" hidden></label>
+            <span class="upload-status" id="statusIndustry"></span>
+        </div>
+        <div class="upload-row">
+            <span class="upload-label">Liquidity</span>
+            <label class="upload-btn">Choose<input type="file" id="uploadLiquidity" accept=".html,.htm" hidden></label>
+            <span class="upload-status" id="statusLiquidity"></span>
+        </div>
+        <div class="upload-row">
+            <span class="upload-label">Master</span>
+            <label class="upload-btn">Choose<input type="file" id="uploadMaster" accept=".html,.htm" hidden></label>
+            <span class="upload-status" id="statusMaster"></span>
+        </div>
+    </div>
+
+    <!-- Ask MIT -->
+    <button class="ask-toggle" id="askToggle">Ask MIT</button>
+    <div class="ask-panel" id="askPanel">
+        <div class="panel-kicker">MIT Brain · Synthesis</div>
+        <div class="ask-mode">
+            <button class="mode-btn active" id="modeQuick">Quick</button>
+            <button class="mode-btn" id="modeReport">Report</button>
+            <button class="preset-toggle" id="presetToggle">Presets</button>
+        </div>
+        <div class="ask-presets" id="askPresets">
+            <div class="preset-group">
+                <span class="preset-group-label">Big Picture</span>
+                <div class="preset-pills">
+                    <button class="preset-pill" data-mode="quick" data-q="Summarise the latest MIT view">Summarise</button>
+                    <button class="preset-pill" data-mode="quick" data-q="What changed from the prior issue?">What changed</button>
+                    <button class="preset-pill" data-mode="quick" data-q="Explain the current regime simply">Regime</button>
+                </div>
+            </div>
+            <div class="preset-group">
+                <span class="preset-group-label">Confirmation</span>
+                <div class="preset-pills">
+                    <button class="preset-pill" data-mode="quick" data-q="What confirms the MIT view?">Confirms</button>
+                    <button class="preset-pill" data-mode="quick" data-q="What weakens the MIT view?">Weakens</button>
+                    <button class="preset-pill" data-mode="quick" data-q="Is liquidity confirming the thesis?">Liquidity</button>
+                </div>
+            </div>
+            <div class="preset-group">
+                <span class="preset-group-label">Allocation</span>
+                <div class="preset-pills">
+                    <button class="preset-pill" data-mode="quick" data-q="What are the best expressions right now?">Expressions</button>
+                    <button class="preset-pill" data-mode="quick" data-q="How should this translate into allocation?">Allocation</button>
+                    <button class="preset-pill" data-mode="quick" data-q="What should I avoid here?">Avoid</button>
+                </div>
+            </div>
+            <div class="preset-group">
+                <span class="preset-group-label">Risk</span>
+                <div class="preset-pills">
+                    <button class="preset-pill" data-mode="quick" data-q="What breaks the current view?">What breaks</button>
+                    <button class="preset-pill" data-mode="quick" data-q="What should I watch next?">Watch next</button>
+                </div>
+            </div>
+            <div class="preset-group">
+                <span class="preset-group-label">Writing</span>
+                <div class="preset-pills">
+                    <button class="preset-pill" data-mode="report" data-q="Write the weekly MIT note">Weekly note</button>
+                    <button class="preset-pill" data-mode="report" data-q="Write the confirmation report">Confirmation</button>
+                    <button class="preset-pill" data-mode="report" data-q="Write a plain-English interpretation">Plain English</button>
+                    <button class="preset-pill" data-mode="report" data-q="Write a tactical regime card">Regime card</button>
+                </div>
+            </div>
+        </div>
+        <textarea class="ask-input" id="askInput" placeholder="Ask a focused macro question…" rows="2"></textarea>
+        <div class="ask-controls">
+            <button class="ask-submit" id="askSubmit">Ask</button>
+            <button class="ask-close" id="askClose">✕</button>
+        </div>
+        <div class="ask-answer" id="askAnswer"></div>
+        <div class="ask-sources" id="askSources"></div>
+    </div>
+
+    <script type="module" src="./script.js"></script>
+</body>
+</html>
