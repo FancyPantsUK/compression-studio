@@ -14,6 +14,11 @@ export default {
                 target: 'http://localhost:8001',
                 rewrite: () => '/brief-snapshot'
             },
+            '/api/ask/stream': {
+                target: 'https://mit-expression-brain-production.up.railway.app',
+                changeOrigin: true,
+                rewrite: () => '/ask/stream'
+            },
             '/api/ask': {
                 target: 'https://mit-expression-brain-production.up.railway.app',
                 changeOrigin: true,
